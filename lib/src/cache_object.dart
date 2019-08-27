@@ -72,7 +72,7 @@ class CacheObjectProvider {
   CacheObjectProvider(this.path);
 
   Future open() async {
-    db = await openDatabase(path, version: 1,
+    db = await openDatabase(path,"", version: 1,
         onCreate: (Database db, int version) async {
       await db.execute('''
       create table $tableCacheObject ( 
