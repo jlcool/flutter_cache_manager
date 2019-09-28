@@ -94,8 +94,13 @@ class CacheStore {
     return new FileInfo(
         File(path), FileSource.Cache, cacheObject.validTill, url);
   }
+  Future<bool> exist(String url) async {
+    var provider = await _cacheObjectProvider;
+    var data = await provider.get(url);
+    return await _fileExists(data);
+  }
 
-  Future<bool> fileExists(CacheObject cacheObject) async {
+  Future<bool> _fileExists(CacheObject cacheObject) async {
     if (cacheObject?.relativePath == null) {
       return false;
     }
@@ -105,7 +110,7 @@ class CacheStore {
   Future<CacheObject> _getCacheDataFromDatabase(String url) async {
     var provider = await _cacheObjectProvider;
     var data = await provider.get(url);
-    if (await fileExists(data)) {
+    if (await _fileExists(data)) {
       _updateCacheDataInDatabase(data);
     }
     _scheduleCleanup();
